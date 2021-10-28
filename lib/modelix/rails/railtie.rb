@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 require "rails"
-require "schema/config"
-require "schema/schema_loader"
+require "modelix/config"
+require "modelix/schema_loader"
 
 class Modelix::Railtie < ::Rails::Railtie
   initializer "Modelix initializer" do |app|
     path = app.config.schemas_path
-    ::Modelix.config.schemas_path = path
+    Modelix.config.schemas_path = path
 
-    schema_loader = ::Modelix::SchemaLoader.new
+    schema_loader = Modelix::SchemaLoader.new
     schema_extensions = ["yml"]
     schema_dirs = {
       path.to_s => schema_extensions
