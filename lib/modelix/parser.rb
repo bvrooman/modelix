@@ -24,16 +24,16 @@ class Modelix::Parser
   end
 
   def parse(raw_report)
-    report = Modelix::Document.new
+    document = Modelix::Document.new
     schema.attributes.each do |attribute|
       value = attribute.parse(raw_report)
       attr = Modelix::Document::Attribute.new(attribute.name, value)
-      report.set(attr)
+      document.set(attr)
     rescue ArgumentError, TypeError => e
       parser_error = ParseError.new(attribute, raw_report, e)
-      Rails.logger.error(parser_error)
+      # Rails.logger.error(parser_error)
       raise parser_error
     end
-    report
+    document
   end
 end

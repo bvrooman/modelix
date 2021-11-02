@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "yaml"
+
 require_relative "default_types"
 require_relative "schema"
 
@@ -54,9 +56,6 @@ class Modelix::SchemaLoader
   end
 
   def initialize
-    # Register TC Equifax format YYYY-MM
-    Modelix::DefaultTypes::Date.register_date_format("%Y-%m", /\A[0-9]{4}-[0-9]{2}\Z/)
-
     # Define integer values that should be treated as nil
     Modelix::DefaultTypes::Integer.nil_values << "NA"
 
@@ -67,14 +66,15 @@ class Modelix::SchemaLoader
     Modelix::DefaultTypes::Float.nil_values << "NA"
   end
 
-  def load_schemas(path)
+  def load_schemas
     context = {}
     context.merge!(default_context)
 
+    path = Modelix.config.schemas_path
     schema_files = schema_files(path)
     schema_files.each do |file|
       path = File.expand_path(file)
-      Rails.logger.info("Parsing modelix file #{path}...")
+      # Rails.logger.info("Parsing modelix file #{path}...")
       namespace = schema_parser.namespace(path)
       data = HashWithIndifferentAccess.new(YAML.load_file(path))
       schema_parser.parse_schema(namespace, data, context)

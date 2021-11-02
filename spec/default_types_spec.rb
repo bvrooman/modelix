@@ -91,7 +91,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect(value).to be_a_kind_of(Integer)
       end
 
-      it 'returns an Integer object when the string input is "0"' do
+      it "returns an Integer object when the string input is '0'" do
         input = "0"
         value = integer_type.parse(input)
         expect(value).to eq 0
@@ -112,7 +112,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect(value).to be_a_kind_of(Integer)
       end
 
-      it 'returns an Integer object when the string input is a "0" with padding' do
+      it "returns an Integer object when the string input is a '0' with padding" do
         input = "000"
         value = integer_type.parse(input)
         expect(value).to eq 0
@@ -147,7 +147,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect { integer_type.parse(input) }.to raise_exception ArgumentError
       end
 
-      it 'returns nil when the string input is "NA"' do
+      it "returns nil when the string input is 'NA'" do
         integer_type.nil_values << "NA"
         input = "NA"
         value = integer_type.parse(input)
@@ -179,7 +179,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect(value).to be_a_kind_of(Integer)
       end
 
-      it 'returns an Integer object when the string input is "0"' do
+      it "returns an Integer object when the string input is '0'" do
         input = "0"
         value = positive_integer_type.parse(input)
         expect(value).to eq input.to_i
@@ -219,7 +219,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect { positive_integer_type.parse(input) }.to raise_exception ArgumentError
       end
 
-      it 'returns nil when the string input is "NA"' do
+      it "returns nil when the string input is 'NA'" do
         positive_integer_type.nil_values << "NA"
         input = "NA"
         value = positive_integer_type.parse(input)
@@ -263,7 +263,7 @@ RSpec.describe Modelix::DefaultTypes do
         expect { float_type.parse(input) }.to raise_exception ArgumentError
       end
 
-      it 'returns nil when the string input is "NA"' do
+      it "returns nil when the string input is 'NA'" do
         float_type.nil_values << "NA"
         input = "NA"
         value = float_type.parse(input)
