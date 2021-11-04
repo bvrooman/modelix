@@ -11,6 +11,7 @@ RSpec.describe Modelix::Schema do
     {
       id: "123480369",
       name: "The ABC Company",
+      active: "true",
       employees: [
         {
           id: "1001",
@@ -52,6 +53,7 @@ RSpec.describe Modelix::Schema do
 
       expect(company.id).to eq(123_480_369)
       expect(company.name).to eq("The ABC Company")
+      expect(company.active).to eq(true)
       expect(company.employees).to be_an(Array)
       expect(company.employees).to all be_a(Test::TestSchema::Employee)
     end
