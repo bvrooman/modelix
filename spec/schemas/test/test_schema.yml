@@ -1,0 +1,71 @@
+schema: TestSchema
+
+# Test Schema
+#
+# E.g.,
+#
+# {
+#    id: 12480369
+#    name: "The ABC Company",
+#    employees: [
+#        {
+#            id: 1001,
+#            name: "John Smith",
+#            date_hired: "2021-08-01",
+#            salary: 50000.0
+#        },
+#        {
+#            id: 1002,
+#            name: "Jane Doe",
+#            date_hired: "2021-09-22",
+#            salary: 60000.0
+#        },
+#        {
+#            id: 1003,
+#            name: "Elon Musk",
+#            date_hired: "2021-10-05",
+#            salary: 30000.0
+#        }
+#    ]
+# }
+#
+definitions:
+  - class: Employee
+    properties:
+      - name: id
+        path:
+          - id
+        type: integer
+
+      - name: date_hired
+        path:
+          - date_hired
+        type: date
+
+      - name: name
+        path:
+          - name
+        type: string
+
+      - name: salary
+        path:
+          - salary
+        type: float
+
+class: Company
+properties:
+  - name: id
+    path:
+      - id
+    type: integer
+
+  - name: name
+    path:
+      - name
+    type: string
+
+  - name: employees
+    path:
+      - employees
+    type: Employee
+    array: true

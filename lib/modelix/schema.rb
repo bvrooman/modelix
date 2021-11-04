@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../modelix'
-require_relative 'parser'
+require_relative "../modelix"
+require_relative "parser"
 
 class Modelix::Schema
   class Parser
@@ -26,7 +26,7 @@ class Modelix::Schema
       schema_path = file.match(regex)[:path]
       directory = File.dirname(schema_path)
       namespace = Object
-      module_names = directory.split('/').select(&:present?)
+      module_names = directory.split("/").select(&:present?)
       module_names.each do |module_name|
         namespace_name = module_name.camelcase.to_s
         namespace = find_or_create_namespace(namespace_name, parent: namespace)
