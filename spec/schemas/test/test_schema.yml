@@ -64,6 +64,11 @@ properties:
       - name
     type: string
 
+  - name: active
+    path:
+      - active
+    type: boolean
+
   - name: employees
     path:
       - employees
