@@ -74,7 +74,7 @@ class Modelix::SchemaLoader
     schema_files = schema_files(path)
     schema_files.each do |file|
       path = File.expand_path(file)
-      # Rails.logger.info("Parsing modelix file #{path}...")
+      Modelix.config.logger.info("Modelix: Parsing schema file #{path}...")
       namespace = schema_parser.namespace(path)
       data = HashWithIndifferentAccess.new(YAML.load_file(path))
       schema_parser.parse_schema(namespace, data, context)
