@@ -45,6 +45,7 @@ class Modelix::SchemaLoader
   def default_context
     @default_context ||= begin
       context = {}
+      context[Modelix::DefaultTypes::Boolean.name] = Modelix::DefaultTypes::Boolean
       context[Modelix::DefaultTypes::Date.name] = Modelix::DefaultTypes::Date
       context[Modelix::DefaultTypes::DateTime.name] = Modelix::DefaultTypes::DateTime
       context[Modelix::DefaultTypes::Integer.name] = Modelix::DefaultTypes::Integer
