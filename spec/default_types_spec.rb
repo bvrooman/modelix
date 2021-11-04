@@ -5,6 +5,38 @@ require "active_support"
 require "modelix/default_types"
 
 RSpec.describe Modelix::DefaultTypes do
+  describe "Boolean" do
+    subject(:boolean_type) { Modelix::DefaultTypes::Boolean }
+
+    describe "::parse" do
+      it "returns true when the string input is a truthy boolean" do
+        input = "TRUE"
+        value = boolean_type.parse(input)
+        expect(value).to be true
+
+        input = true
+        value = boolean_type.parse(input)
+        expect(value).to be true
+      end
+
+      it "returns false when the string input is a falsey boolean" do
+        input = "FALSE"
+        value = boolean_type.parse(input)
+        expect(value).to be false
+
+        input = false
+        value = boolean_type.parse(input)
+        expect(value).to be false
+      end
+
+      it "raises an ArgumentError when the string input is neither a truthy nor a falsey boolean" do
+        input = "ERROR"
+
+        expect { boolean_type.parse(input) }.to raise_exception ArgumentError
+      end
+    end
+  end
+
   describe "Date" do
     subject(:date_type) { Modelix::DefaultTypes::Date }
 
