@@ -5,7 +5,7 @@ schema: TestSchema
 # E.g.,
 #
 # {
-#    id: 12480369
+#    id: 12480369,
 #    name: "The ABC Company",
 #    employees: [
 #        {

@@ -2,10 +2,12 @@
 
 require "active_support"
 require "active_support/core_ext"
+require "logger"
 
 module Modelix
   class Config
     @default_config = {
+      logger: Logger.new($stdout),
       schemas_path: ""
     }
     @allowed_config_keys = @default_config.keys
