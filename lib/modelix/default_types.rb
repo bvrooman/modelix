@@ -4,6 +4,23 @@ require "active_support"
 require "active_support/core_ext"
 
 module Modelix::DefaultTypes
+  class Boolean
+    def self.name
+      "boolean"
+    end
+
+    def self.parse(data)
+      raise ArgumentError, "Invalid #{name}: #{data}" unless valid?(data)
+
+      data.to_s.downcase == "true"
+    end
+
+    def self.valid?(data)
+      options = %w[true false]
+      options.include?(data.to_s.downcase)
+    end
+  end
+
   class Date
     class Format
       attr_reader :template, :regex
