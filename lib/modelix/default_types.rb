@@ -1,169 +1,171 @@
 # frozen_string_literal: true
 
-require "active_support"
-require "active_support/core_ext"
+require 'active_support'
+require 'active_support/core_ext'
 
-module Modelix::DefaultTypes
-  class Boolean
-    def self.name
-      "boolean"
-    end
+module Modelix
+  module DefaultTypes
+    class Boolean
+      def self.name
+        'boolean'
+      end
 
-    def self.parse(data)
-      raise ArgumentError, "Invalid #{name}: #{data}" unless valid?(data)
+      def self.parse(data)
+        raise ArgumentError, "Invalid #{name}: #{data}" unless valid?(data)
 
-      data.to_s.downcase == "true"
-    end
+        data.to_s.downcase == 'true'
+      end
 
-    def self.valid?(data)
-      options = %w[true false]
-      options.include?(data.to_s.downcase)
-    end
-  end
-
-  class Date
-    class Format
-      attr_reader :template, :regex
-
-      def initialize(template, regex)
-        @template = template
-        @regex = regex
+      def self.valid?(data)
+        options = %w[true false]
+        options.include?(data.to_s.downcase)
       end
     end
 
-    def self.name
-      "date"
-    end
+    class Date
+      class Format
+        attr_reader :template, :regex
 
-    def self.register_date_format(template, regex)
-      date_formats << Format.new(template, regex)
-    end
-
-    def self.date_formats
-      @date_formats ||= []
-    end
-
-    def self.parse(data)
-      return nil unless valid?(data)
-
-      date_formats.each do |format|
-        return ::Date.strptime(data, format.template) if data.to_s.match?(format.regex)
+        def initialize(template, regex)
+          @template = template
+          @regex = regex
+        end
       end
 
-      ::Date.parse(data)
+      def self.name
+        'date'
+      end
+
+      def self.register_date_format(template, regex)
+        date_formats << Format.new(template, regex)
+      end
+
+      def self.date_formats
+        @date_formats ||= []
+      end
+
+      def self.parse(data)
+        return nil unless valid?(data)
+
+        date_formats.each do |format|
+          return ::Date.strptime(data, format.template) if data.to_s.match?(format.regex)
+        end
+
+        ::Date.parse(data)
+      end
+
+      def self.valid?(data)
+        return false if data.blank?
+
+        true
+      end
     end
 
-    def self.valid?(data)
-      return false if data.blank?
+    class DateTime
+      def self.name
+        'datetime'
+      end
 
-      true
-    end
-  end
+      def self.parse(data)
+        return nil unless valid?(data)
 
-  class DateTime
-    def self.name
-      "datetime"
-    end
+        ::DateTime.parse(data) if data.present?
+      end
 
-    def self.parse(data)
-      return nil unless valid?(data)
+      def self.valid?(data)
+        return false if data.blank?
 
-      ::DateTime.parse(data) if data.present?
-    end
-
-    def self.valid?(data)
-      return false if data.blank?
-
-      true
-    end
-  end
-
-  class Integer
-    def self.name
-      "integer"
+        true
+      end
     end
 
-    def self.nil_values
-      @nil_values ||= []
+    class Integer
+      def self.name
+        'integer'
+      end
+
+      def self.nil_values
+        @nil_values ||= []
+      end
+
+      def self.parse(data)
+        return nil if data.blank?
+        return nil if nil_values.include? data
+
+        # Prevent invalid input from being cast to a integer
+        raise ArgumentError, "Invalid #{name}: #{data}" unless valid?(data)
+
+        data.to_i
+      end
+
+      def self.valid?(data)
+        d = data.to_s
+        return false if d.blank?
+
+        # Return false if the string contains any character that is not a digit or '-'
+        return false if /[^\d-]/.match?(d)
+
+        # Return false if the string contains a '-' anywhere other than the start
+        return false if [nil, 0].exclude?(d.index('-'))
+
+        true
+      end
     end
 
-    def self.parse(data)
-      return nil if data.blank?
-      return nil if nil_values.include? data
+    class PositiveInteger < Integer
+      def self.name
+        'PositiveInteger'
+      end
 
-      # Prevent invalid input from being cast to a integer
-      raise ArgumentError, "Invalid #{name}: #{data}" unless valid?(data)
+      def self.valid?(data)
+        valid = super
 
-      data.to_i
+        d = data.to_i
+        valid &= d >= 0
+        valid
+      end
     end
 
-    def self.valid?(data)
-      d = data.to_s
-      return false if d.blank?
+    class Float
+      def self.name
+        'float'
+      end
 
-      # Return false if the string contains any character that is not a digit or '-'
-      return false if /[^\d-]/.match?(d)
+      def self.nil_values
+        @nil_values ||= []
+      end
 
-      # Return false if the string contains a '-' anywhere other than the start
-      return false if [nil, 0].exclude?(d.index("-"))
+      def self.parse(data)
+        return nil if data.blank?
+        return nil if nil_values.include? data
 
-      true
-    end
-  end
+        # Prevent invalid input from being cast to a float
+        raise ArgumentError, "Invalid #{name} #{data}" unless valid?(data)
 
-  class PositiveInteger < Integer
-    def self.name
-      "PositiveInteger"
-    end
+        data.to_f
+      end
 
-    def self.valid?(data)
-      valid = super
+      def self.valid?(data)
+        d = data.to_s
+        return false if d.blank?
 
-      d = data.to_i
-      valid &= d >= 0
-      valid
-    end
-  end
+        # Allow integer and float values
+        return false unless [d.to_i.to_s, d.to_f.to_s].include? d.to_s
 
-  class Float
-    def self.name
-      "float"
+        true
+      end
     end
 
-    def self.nil_values
-      @nil_values ||= []
-    end
+    class String
+      def self.name
+        'string'
+      end
 
-    def self.parse(data)
-      return nil if data.blank?
-      return nil if nil_values.include? data
+      def self.parse(data)
+        return '' if data.blank?
 
-      # Prevent invalid input from being cast to a float
-      raise ArgumentError, "Invalid #{name} #{data}" unless valid?(data)
-
-      data.to_f
-    end
-
-    def self.valid?(data)
-      d = data.to_s
-      return false if d.blank?
-
-      # Allow integer and float values
-      return false unless [d.to_i.to_s, d.to_f.to_s].include? d.to_s
-
-      true
-    end
-  end
-
-  class String
-    def self.name
-      "string"
-    end
-
-    def self.parse(data)
-      return "" if data.blank?
-
-      data.to_s
+        data.to_s
+      end
     end
   end
 end
