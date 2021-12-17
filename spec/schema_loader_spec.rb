@@ -10,7 +10,7 @@ RSpec.describe Modelix::SchemaLoader do
   let(:path) { "./spec/schemas" }
 
   before do
-    Modelix.config.schemas_path = path
+    Modelix.config.paths << path
   end
 
   describe "load_schemas" do

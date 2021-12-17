@@ -5,10 +5,6 @@ require_relative "parser"
 
 class Modelix::Schema
   class Parser
-    def schemas_path
-      Modelix.config.schemas_path
-    end
-
     # Extract a namespace from a modelix file's filesystem path
     #
     # Given a fully qualified path, this will return a namespace (module or class) that matches the folder structure of
@@ -21,8 +17,8 @@ class Modelix::Schema
     #   file = "/data/schemas/entities/tc/default.yml"
     #   parser.namespace(file) #=> Entities::Tc
     #
-    def namespace(file)
-      regex = /#{schemas_path}(?<path>.+)/
+    def namespace(dir, file)
+      regex = /#{dir}(?<path>.+)/
       schema_path = file.match(regex)[:path]
       directory = File.dirname(schema_path)
       namespace = Object
@@ -139,6 +135,7 @@ class Modelix::Schema
       klass_name = data[:class]
       properties = data[:properties] || []
       klass = define_class(klass_name, properties, namespace, context)
+      namespace.send(:remove_const, klass_name) if namespace.const_defined?(klass_name)
       namespace.const_set(klass_name, klass)
     end
     # rubocop:enable Metrics/CyclomaticComplexity

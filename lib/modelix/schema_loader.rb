@@ -68,16 +68,22 @@ class Modelix::SchemaLoader
   end
 
   def load_schemas
+    paths = Modelix.config.paths
+    paths.each do |path|
+      load_schema_path(path)
+    end
+  end
+
+  def load_schema_path(path)
     context = {}
     context.merge!(default_context)
 
-    path = Modelix.config.schemas_path
     schema_files = schema_files(path)
     schema_files.each do |file|
-      path = File.expand_path(file)
-      Modelix.config.logger.info("Modelix: Parsing schema file #{path}...")
-      namespace = schema_parser.namespace(path)
-      data = HashWithIndifferentAccess.new(YAML.load_file(path))
+      file_path = File.expand_path(file)
+      Modelix.config.logger.info("Modelix: Parsing schema file #{file_path}...")
+      namespace = schema_parser.namespace(path, file_path)
+      data = HashWithIndifferentAccess.new(YAML.load_file(file_path))
       schema_parser.parse_schema(namespace, data, context)
     end
   end
