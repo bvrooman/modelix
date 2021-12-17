@@ -8,14 +8,15 @@ class Modelix::Railtie < ::Rails::Railtie
   initializer "Modelix initializer" do |app|
     Modelix.config.logger = Rails.logger
 
-    path = app.config.schemas_path
-    Modelix.config.schemas_path = path
+    paths = app.config.modelix_paths
+    Modelix.config.paths.push(*paths)
 
     schema_loader = Modelix::SchemaLoader.new
     schema_extensions = ["yml"]
-    schema_dirs = {
-      path.to_s => schema_extensions
-    }
+    schema_dirs = {}
+    paths.each do |path|
+      schema_dirs[path.to_s] = schema_extensions
+    end
 
     schema_file_watcher = app.config.file_watcher.new([], schema_dirs) do
       schema_loader.load_schemas
