@@ -3,7 +3,7 @@ AllCops:
 
 Style/StringLiterals:
   Enabled: true
-  EnforcedStyle: double_quotes
+  EnforcedStyle: single_quotes
 
 Style/StringLiteralsInInterpolation:
   Enabled: true
@@ -11,7 +11,14 @@ Style/StringLiteralsInInterpolation:
 
 Style/ClassAndModuleChildren:
   Enabled: true
-  EnforcedStyle: compact
+  EnforcedStyle: nested
+
+Style/Documentation:
+  Enabled: false
 
 Layout/LineLength:
   Max: 120
+
+Layout/EndOfLine:
+  Enabled: false
+
