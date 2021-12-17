@@ -8,7 +8,7 @@ module Modelix
   class Config
     @default_config = {
       logger: Logger.new($stdout),
-      schemas_path: ""
+      paths: []
     }
     @allowed_config_keys = @default_config.keys
 
