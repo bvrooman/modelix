@@ -113,7 +113,6 @@ module Modelix
         klass
       end
 
-      # rubocop:disable Metrics/CyclomaticComplexity
       def parse_schema(namespace, data, context)
         schema = data[:schema]
         if schema.present?
@@ -138,7 +137,6 @@ module Modelix
         klass = define_class(klass_name, properties, namespace, context)
         namespace.const_set(klass_name, klass)
       end
-      # rubocop:enable Metrics/CyclomaticComplexity
 
       private
 

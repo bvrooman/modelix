@@ -9,7 +9,11 @@ module Modelix
     initializer 'Modelix initializer' do |app|
       Modelix.config.logger = Rails.logger
 
-      paths = app.config.modelix_paths
+      paths = begin
+        app.config.modelix_paths
+      rescue StandardError
+        []
+      end
       Modelix.config.paths.push(*paths)
 
       schema_loader = Modelix::SchemaLoader.new
