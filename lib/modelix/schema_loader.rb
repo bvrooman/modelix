@@ -86,6 +86,9 @@ module Modelix
         namespace = schema_parser.namespace(path, file_path)
         data = HashWithIndifferentAccess.new(YAML.load_file(file_path))
         schema_parser.parse_schema(namespace, data, context)
+      rescue StandardError => e
+        Modelix.config.logger.info("Modelix: Failed to parse schema file #{file_path}: #{e}")
+        raise e
       end
     end
   end

@@ -136,7 +136,6 @@ module Modelix
         klass_name = data[:class]
         properties = data[:properties] || []
         klass = define_class(klass_name, properties, namespace, context)
-        namespace.send(:remove_const, klass_name) if namespace.const_defined?(klass_name)
         namespace.const_set(klass_name, klass)
       end
       # rubocop:enable Metrics/CyclomaticComplexity
