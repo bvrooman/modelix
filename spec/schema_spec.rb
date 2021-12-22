@@ -43,6 +43,7 @@ RSpec.describe Modelix::Schema do
   end
 
   before do
+    Modelix.reset_config
     Modelix.config.paths << path
     schema_loader.load_schemas
   end

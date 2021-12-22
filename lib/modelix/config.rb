@@ -36,11 +36,15 @@ module Modelix
     end
   end
 
-  mattr_reader :config do
-    @config ||= Config.new.config
+  def self.config
+    @config ||= default_configuration
   end
 
-  mattr_reader :default_configuration do
-    @default_configuration || Config.new.config
+  def self.reset_config
+    @config = default_configuration
+  end
+
+  def self.default_configuration
+    Config.new.config
   end
 end
