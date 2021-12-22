@@ -8,6 +8,7 @@ module Modelix
   class Config
     @default_config = {
       logger: Logger.new($stdout),
+      registered_types: {},
       paths: []
     }
     @allowed_config_keys = @default_config.keys
@@ -20,6 +21,12 @@ module Modelix
 
     def initialize
       @config = OpenStruct.new Config.default_config
+
+      @config.instance_eval do
+        def register_type(name, type)
+          registered_types[name.to_s] = type
+        end
+      end
     end
 
     def configure(options)

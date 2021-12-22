@@ -2,6 +2,7 @@
 
 require 'yaml'
 
+require_relative 'config'
 require_relative 'default_types'
 require_relative 'schema'
 
@@ -78,6 +79,7 @@ module Modelix
     def load_schema_path(path)
       context = {}
       context.merge!(default_context)
+      context.merge!(Modelix.config.registered_types)
 
       schema_files = schema_files(path)
       schema_files.each do |file|

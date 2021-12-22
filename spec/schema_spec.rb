@@ -43,7 +43,7 @@ RSpec.describe Modelix::Schema do
   end
 
   before do
-    Modelix.config.schemas_path = path
+    Modelix.config.paths << path
     schema_loader.load_schemas
   end
 
@@ -81,6 +81,31 @@ RSpec.describe Modelix::Schema do
       expect do
         Test::TestSchema::Company.parse(invalid_data)
       end.to raise_error Modelix::Parser::ParseError
+    end
+
+    describe 'with custom types' do
+      before do
+        klass = Class.new do
+          def self.parse(data)
+            return '' if data.blank?
+
+            "CUSTOM STRING #{data.to_s}"
+          end
+        end
+
+        Modelix.config.register_type('string', klass)
+
+        schema_loader.load_schemas
+      end
+
+      it 'parses objects using the parse method defined by the custom types' do
+        company = Test::TestSchema::Company.parse(data)
+
+        expect(company.name).to eq('CUSTOM STRING The ABC Company')
+        expect(company.employees[0].name).to eq('CUSTOM STRING John Smith')
+        expect(company.employees[1].name).to eq('CUSTOM STRING Jane Doe')
+        expect(company.employees[2].name).to eq('CUSTOM STRING Elon Musk')
+      end
     end
   end
 end
